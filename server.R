@@ -9,6 +9,7 @@ r1 <- ""
 r2 <- ""
 r3 <- ""
 dfResult <- ""
+pocketStatus <- 0
 dfManyMachines <- ""
 
 # ----------------------------------------------------------------------------------------
@@ -87,6 +88,7 @@ shinyServer(function(input, output, session) {
           costPerPlay <- as.numeric(input$costPerPlay)
           
           dfResult <<- playSlot(input$numPlay, costPerPlay)
+          pocketStatus <<- dfResult$pocketStatus[input$numPlay+1]
           
         ggplot(data=dfResult, aes(x=playNum, y=netBalance)) +
                 geom_line(colour="darkgreen") +
@@ -100,7 +102,6 @@ shinyServer(function(input, output, session) {
           costPerPlay <- as.numeric(input$costPerPlay)
           
           amountSpent <- input$numPlay * costPerPlay 
-          netTotal <- dfResult$pocketStatus[input$numPlay+1]
           numPrize1 <- sum(r1 == 7 & r2 == 7 & r3 == 7)
           numPrize2 <- sum(r1 != 7 & r1 == r2 & r2 == r3)
           
@@ -108,8 +109,8 @@ shinyServer(function(input, output, session) {
           paste("# of consecutive plays: ", prettyNum(input$numPlay, big.mark=","), 
                 "<br />Cost per play: $", format(costPerPlay, digits=2),
                 "<br />Total spent: $", prettyNum(amountSpent, big.mark=","),
-                "<br /><strong>Total won: $", prettyNum(netTotal, big.mark=","), "</strong>",
-                "<br /><strong>Net total: $", prettyNum(netTotal - amountSpent, big.mark=","), "</strong>",
+                "<br /><strong>Total won: $", prettyNum(pocketStatus, big.mark=","), "</strong>",
+                "<br /><strong>Net total: $", prettyNum(pocketStatus - amountSpent, big.mark=","), "</strong>",
                 "<br />",
                 "<br /><strong>Prize 1 Wins = ", numPrize1, "/", input$numPlay, "=", round(numPrize1 / input$numPlay * 100, digits=2), "%</strong>",
                 "<br /><strong>Prize 2 Wins = ", numPrize2, "/", input$numPlay, "=", round(numPrize2 / input$numPlay * 100, digits=2), "%</strong>")
@@ -120,7 +121,7 @@ shinyServer(function(input, output, session) {
           # Define costPerPlay
           costPerPlay <- as.numeric(input$costPerPlay)
           
-          dfMMResult <- data.frame(1, dfResult$pocketStatus[input$numPlay+1], sum(r1 == 7 & r2 == 7 & r3 == 7), sum(r1 != 7 & r1 == r2 & r2 == r3))
+          dfMMResult <- data.frame(1, pocketStatus, sum(r1 == 7 & r2 == 7 & r3 == 7), sum(r1 != 7 & r1 == r2 & r2 == r3))
           dfMMResult <- playManySlots(dfMMResult, input$numMachine, input$numPlay, as.numeric(input$costPerPlay), session)
           names(dfMMResult) <- c("machineNum", "playerResult", "numPrize1", "numPrize2")
                     
