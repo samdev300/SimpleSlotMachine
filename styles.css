@@ -1,0 +1,23 @@
+
+.shiny-progress .bar {
+        background-color: #FF0000;
+        .opacity = 0.8;
+        height: 200px;
+        font-size:72px;
+}
+
+.shiny-progress .progress {
+        height:140px;
+}
+
+.shiny-progress .progress-text .progress-message{
+        width:600px;
+        height:50px;
+        font-size:16px;
+}
+
+.shiny-progress .progress-text .progress-detail{
+font-size:20px;
+
+}
+
